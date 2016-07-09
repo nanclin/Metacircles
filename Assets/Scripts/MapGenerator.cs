@@ -57,15 +57,29 @@ public class MapGenerator : MonoBehaviour {
 		return pos;
 	}
 
+	private bool IsInMapSpace(float[,] map, Vector2 pos){
+		float width = map.GetLength(0);
+		float height = map.GetLength(1);
+		float halfWidth = width / 2f;
+		float halfHeight = height / 2f;
+		return (pos.x >= -halfWidth && pos.x <= halfWidth && pos.y >= -halfHeight && pos.y <= halfHeight);
+	}
+
 	[Range(-5,5)] public float[] Pos = new float[2];
 	[Range(0,9)] public int[] Coord = new int[2];
 	void Update(){
 		Vector2 mousePos = Camera.ScreenToWorldPoint(Input.mousePosition);
+
+		if( IsInMapSpace(Map,mousePos) ){
+			Dummy.SetActive(true);
+			int[] coord = PosToCoord(Map,mousePos.x, mousePos.y);
+			print("pos to coord: " + coord[0] + ", " + coord[1] );
+		}else{
+			Dummy.SetActive(false);
+		}
+
 		mousePos = ClampPosToMapSpace(Map, mousePos);
 		Dummy.transform.position = new Vector3(mousePos.x, mousePos.y, Camera.nearClipPlane);
-
-		int[] coord = PosToCoord(Map,mousePos.x, mousePos.y);
-		print("pos to coord: " + coord[0] + ", " + coord[1] );
 
 		DrawMap();
 	}
