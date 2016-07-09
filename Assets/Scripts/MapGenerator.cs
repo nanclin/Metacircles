@@ -7,6 +7,8 @@ public class MapGenerator : MonoBehaviour {
 	[SerializeField] private Camera Camera;
 	[SerializeField] private Renderer TextureRenderer;
 	[SerializeField] private GameObject Dummy;
+	[SerializeField] private Color ShadowColor = Color.black;
+	[SerializeField] private Color LightColor = Color.white;
 	[SerializeField] public bool AutoUpdate;
 	[SerializeField] public int Width = 100;
 	[SerializeField] public int Height = 100;
@@ -238,7 +240,7 @@ public class MapGenerator : MonoBehaviour {
 		Color[] colorMap = new Color[width * height];
 		for( int y = 0; y < height; y++){
 			for( int x = 0; x < width; x++){
-				colorMap[y * width + x] = Color.Lerp(Color.white, Color.red, heightMap[x,y] / ValueScale);
+				colorMap[y * width + x] = Color.Lerp(ShadowColor, LightColor, heightMap[x,y] / ValueScale);
 			}
 		}
 
