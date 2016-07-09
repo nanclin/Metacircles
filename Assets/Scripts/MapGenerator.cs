@@ -9,15 +9,18 @@ public class MapGenerator : MonoBehaviour {
 	[SerializeField] private GameObject Dummy;
 	[SerializeField] private Color ShadowColor = Color.black;
 	[SerializeField] private Color LightColor = Color.white;
+	[SerializeField] private Color DebugThresholdColor = Color.red;
 	[SerializeField] public bool AutoUpdate;
 	[SerializeField] public int Width = 100;
 	[SerializeField] public int Height = 100;
 	[SerializeField] public int Seed = 0;
-	[Range(0.1f,1)][SerializeField] private float Threshold = 0.5f;
+	[Range(0.01f,1f)][SerializeField] private float ThresholdZero = 0.01f;
+	[Range(0.01f,1f)][SerializeField] private float Threshold = 0.5f;
 	[Range(1f,10f)][SerializeField] private float FalloffPower = 1f;
 	[SerializeField] private float Erase = 0.01f;
 	[SerializeField] private float ValueScale = 1;
-	[SerializeField] private bool IsBitMap = true;
+	[SerializeField] private bool IsBitMap;
+	[SerializeField] private bool DebugThreshold;
 	[SerializeField] private Vector2[] Metacircles = null;
 	[SerializeField] private float[] Radiuses = null;
 
@@ -242,7 +245,16 @@ public class MapGenerator : MonoBehaviour {
 		Color[] colorMap = new Color[width * height];
 		for( int y = 0; y < height; y++){
 			for( int x = 0; x < width; x++){
-				colorMap[y * width + x] = Color.Lerp(ShadowColor, LightColor, heightMap[x,y] / ValueScale);
+				float value = heightMap[x,y];
+				Color color = Color.Lerp(ShadowColor, LightColor, value);
+
+				if( DebugThreshold ){
+					if( value <= ThresholdZero || value >= Threshold ){
+						color = Color.Lerp( color, DebugThresholdColor, DebugThresholdColor.a );
+					}
+				}
+
+				colorMap[y * width + x] = color;
 			}
 		}
 

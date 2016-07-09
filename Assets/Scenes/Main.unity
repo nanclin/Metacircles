@@ -120,40 +120,26 @@ MonoBehaviour:
   Camera: {fileID: 1558071250}
   TextureRenderer: {fileID: 1065812069}
   Dummy: {fileID: 1318105436}
-  ShadowColor: {r: 0, g: 0, b: 0, a: 1}
+  ShadowColor: {r: 0.11764705, g: 0.11764705, b: 0.11764705, a: 1}
   LightColor: {r: 1, g: 1, b: 1, a: 1}
+  DebugThresholdColor: {r: 1, g: 0, b: 0, a: 0.197}
   AutoUpdate: 1
   Width: 100
   Height: 150
   Seed: 0
   ThresholdZero: 0.1
-  Threshold: 0.5
-  FalloffPower: 1.8
+  Threshold: 1
+  FalloffPower: 1.5
   Erase: 0.01
   ValueScale: 1
   IsBitMap: 0
+  DebugThreshold: 1
   Metacircles:
   - {x: 0, y: 0}
-  - {x: 0, y: 36.1}
+  - {x: 0, y: 42.2}
   Radiuses:
   - 20
   - 10
-  FalloffCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0.099999994
-      value: 0
-      inSlope: 1.1111112
-      outSlope: 1.1111112
-      tangentMode: 10
-    - time: 1
-      value: 1
-      inSlope: 1.1111112
-      outSlope: 1.1111112
-      tangentMode: 10
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
 --- !u!4 &565745577
 Transform:
   m_ObjectHideFlags: 0
