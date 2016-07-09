@@ -13,13 +13,13 @@ public class MapGenerator : MonoBehaviour {
 	[SerializeField] public int Width = 100;
 	[SerializeField] public int Height = 100;
 	[SerializeField] public int Seed = 0;
-	[SerializeField] private float Threshold = 0.5f;
+	[Range(0.1f,1)][SerializeField] private float Threshold = 0.5f;
+	[Range(1f,10f)][SerializeField] private float FalloffPower = 1f;
 	[SerializeField] private float Erase = 0.01f;
 	[SerializeField] private float ValueScale = 1;
 	[SerializeField] private bool IsBitMap = true;
 	[SerializeField] private Vector2[] Metacircles = null;
 	[SerializeField] private float[] Radiuses = null;
-	[SerializeField] private float[] Powers = null;
 
 	private float[,] Map;
 
@@ -92,7 +92,7 @@ public class MapGenerator : MonoBehaviour {
 		}else{
 			float[,] metacirclesMap = ApplyMetacircles( Map, Metacircles, Radiuses );
 			float[,] gradientMap = GenerateGradientMap(Width, Height);
-			List<float[,]> maps = new List<float[,]>{ metacirclesMap, gradientMap };
+			List<float[,]> maps = new List<float[,]>{ metacirclesMap };
 			DrawMap( CombineMaps(maps) );
 		}
 	}
@@ -139,14 +139,16 @@ public class MapGenerator : MonoBehaviour {
 		for( int y = 0; y < height; y++){
 			for( int x = 0; x < width; x++){
 				float[] pos = CoordToPos(map, x, y );
-				float value = 0;
+				float sum = 0;
 				for(int i = 0; i < circles.Length; i++){
 					float dx = pos[0] - circles[i].x;
 					float dy = pos[1] - circles[i].y;
 					float sqrDis = dx * dx + dy * dy;
-					value += (Mathf.Pow( radiuses[i], 2) / sqrDis);
+					float value = Mathf.Pow( radiuses[i], 2) / sqrDis;
+					value = Mathf.Pow(value, FalloffPower);
+					sum += value;
 				}
-				map[x,y] += value / circles.Length;
+				map[x,y] += sum / circles.Length;
 
 //				map[x,y] = ((float)x / (float)width + (float)y / (float)height) / 2f;
 			}
@@ -194,7 +196,7 @@ public class MapGenerator : MonoBehaviour {
 					float dx = xCoor - Metacircles[i].x;
 					float dy = yCoor - Metacircles[i].y;
 					float sqrDis = dx * dx + dy * dy;
-					value += (Mathf.Pow( Radiuses[i], 2) / sqrDis) * Powers[i];
+					value += (Mathf.Pow( Radiuses[i], 2) / sqrDis);
 				}
 
 //				if( x == width/2 && y == height/2 ){

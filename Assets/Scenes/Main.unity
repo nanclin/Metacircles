@@ -120,24 +120,40 @@ MonoBehaviour:
   Camera: {fileID: 1558071250}
   TextureRenderer: {fileID: 1065812069}
   Dummy: {fileID: 1318105436}
+  ShadowColor: {r: 0, g: 0, b: 0, a: 1}
+  LightColor: {r: 1, g: 1, b: 1, a: 1}
   AutoUpdate: 1
-  Width: 10
-  Height: 10
+  Width: 100
+  Height: 150
   Seed: 0
+  ThresholdZero: 0.1
   Threshold: 0.5
+  FalloffPower: 1.8
   Erase: 0.01
   ValueScale: 1
   IsBitMap: 0
   Metacircles:
   - {x: 0, y: 0}
+  - {x: 0, y: 36.1}
   Radiuses:
-  - 1
-  Powers:
-  - 0
-  Pos:
-  - 0
-  - 0
-  Coord: 0000000000000000
+  - 20
+  - 10
+  FalloffCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0.099999994
+      value: 0
+      inSlope: 1.1111112
+      outSlope: 1.1111112
+      tangentMode: 10
+    - time: 1
+      value: 1
+      inSlope: 1.1111112
+      outSlope: 1.1111112
+      tangentMode: 10
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!4 &565745577
 Transform:
   m_ObjectHideFlags: 0
@@ -210,7 +226,7 @@ Transform:
   m_GameObject: {fileID: 1065812068}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 10, y: 1, z: 15}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -352,7 +368,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 100
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
