@@ -65,8 +65,6 @@ public class MapGenerator : MonoBehaviour {
 		return (pos.x >= -halfWidth && pos.x <= halfWidth && pos.y >= -halfHeight && pos.y <= halfHeight);
 	}
 
-	[Range(-5,5)] public float[] Pos = new float[2];
-	[Range(0,9)] public int[] Coord = new int[2];
 	void Update(){
 		Vector2 mousePos = Camera.ScreenToWorldPoint(Input.mousePosition);
 
@@ -74,14 +72,14 @@ public class MapGenerator : MonoBehaviour {
 			Dummy.SetActive(true);
 			int[] coord = PosToCoord(Map,mousePos.x, mousePos.y);
 			print("pos to coord: " + coord[0] + ", " + coord[1] );
+			Metacircles[0] = mousePos;
+			DrawMap();
 		}else{
 			Dummy.SetActive(false);
 		}
 
 		mousePos = ClampPosToMapSpace(Map, mousePos);
 		Dummy.transform.position = new Vector3(mousePos.x, mousePos.y, Camera.nearClipPlane);
-
-		DrawMap();
 	}
 
 	public void DrawMap(){
@@ -134,14 +132,11 @@ public class MapGenerator : MonoBehaviour {
 		int height = map.GetLength(1);
 		for( int y = 0; y < height; y++){
 			for( int x = 0; x < width; x++){
-				float xPos = (float)x + 0.5f - (float)width / 2f;
-				float yPos = (float)y + 0.5f - (float)height / 2f;
-//				print("coors: " + x + ", " + y);
-//				print("pos: " + xPos + ", " + yPos);
+				float[] pos = CoordToPos(map, x, y );
 				float value = 0;
 				for(int i = 0; i < circles.Length; i++){
-					float dx = xPos - circles[i].x;
-					float dy = yPos - circles[i].y;
+					float dx = pos[0] - circles[i].x;
+					float dy = pos[1] - circles[i].y;
 					float sqrDis = dx * dx + dy * dy;
 					value += (Mathf.Pow( radiuses[i], 2) / sqrDis);
 				}
@@ -217,7 +212,7 @@ public class MapGenerator : MonoBehaviour {
 		}
 
 		Texture2D texture = new Texture2D(width, height);
-		texture.wrapMode = TextureWrapMode.Clamp;
+		texture.wrapMode = TextureWrapMode.Repeat;
 		texture.filterMode = FilterMode.Point;
 		texture.SetPixels(colorMap);
 		texture.Apply();
