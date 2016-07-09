@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MapGenerator : MonoBehaviour {
 
@@ -87,7 +88,10 @@ public class MapGenerator : MonoBehaviour {
 		if( IsBitMap ){
 			DrawMap( ConvertHeightToBitMap( ApplyMetacircles( Map, Metacircles, Radiuses ), Threshold ) );
 		}else{
-			DrawMap(ApplyMetacircles( Map, Metacircles, Radiuses ) );
+			float[,] metacirclesMap = ApplyMetacircles( Map, Metacircles, Radiuses );
+			float[,] gradientMap = GenerateGradientMap(Width, Height);
+			List<float[,]> maps = new List<float[,]>{ metacirclesMap, gradientMap };
+			DrawMap( CombineMaps(maps) );
 		}
 	}
 
@@ -143,6 +147,33 @@ public class MapGenerator : MonoBehaviour {
 				map[x,y] += value / circles.Length;
 
 //				map[x,y] = ((float)x / (float)width + (float)y / (float)height) / 2f;
+			}
+		}
+		return map;
+	}
+
+	private float[,] GenerateGradientMap(int width, int height){
+		float[,] map = new float[width,height];
+		for( int y = 0; y < height; y++){
+			for( int x = 0; x < width; x++){
+				map[x,y] += (float)x / (float)width;
+			}
+		}
+		return map;
+	}
+
+	private float[,] CombineMaps(List<float[,]> maps){
+//		Debug.LogWarning("Maps might not be the same size!");
+
+		int width = maps[0].GetLength(0);
+		int height = maps[0].GetLength(1);
+		float[,] map = new float[width,height];
+
+		for(int i = 0; i < maps.Count; i++){
+			for(int y = 0; y < height; y++){
+				for( int x = 0; x < width; x++){
+					map[x,y] += maps[i][x,y] / maps.Count;
+				}
 			}
 		}
 		return map;
