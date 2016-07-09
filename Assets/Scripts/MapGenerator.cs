@@ -47,21 +47,19 @@ public class MapGenerator : MonoBehaviour {
 		}
 	}
 
+	[Range(-5,5)] public float[] Pos = new float[2];
+	[Range(0,9)] public int[] Coord = new int[2];
 	void Update(){
-		Vector2 mousePos = Camera.ScreenToWorldPoint(Input.mousePosition);
-		Dummy.transform.position = new Vector3(mousePos.x, mousePos.y, Camera.nearClipPlane);
-//		print("mousePos: " + mousePos.x + ", " + mousePos.y);
-		int xCoor = Mathf.FloorToInt( mousePos.x );
-		int yCoor = Mathf.FloorToInt( mousePos.y );
-//		print("coors: " + xCoor + ", " + yCoor);
-//		mousePos.x /= 10f;
-//		mousePos.y /= 10f;
-//		Metacircles[0] = mousePos;
+//		Vector2 mousePos = Camera.ScreenToWorldPoint(Input.mousePosition);
+//		Dummy.transform.position = new Vector3(mousePos.x, mousePos.y, Camera.nearClipPlane);
 
 		DrawMap();
 
-		int[] coord = PosToCoord(Map,-5,-5);
-		float[] pos = CoordToPos(Map,coord[0],coord[1]);
+		int[] coord = PosToCoord(Map,Pos[0],Pos[1]);
+		float[] pos = CoordToPos(Map,Coord[0],Coord[1]);
+//		Dummy.transform.position = new Vector3(Pos[0], Pos[1], -1);
+		Dummy.transform.position = new Vector3(pos[0], pos[1], -1);
+
 		print("pos to coord: " + coord[0] + ", " + coord[1] );
 		print("coord to pos: " + pos[0] + ", " + pos[1] );
 	}
@@ -75,6 +73,7 @@ public class MapGenerator : MonoBehaviour {
 		}
 	}
 
+	// TODO: add plane offset
 	private int[] PosToCoord(float[,] map, float xPos, float yPos){
 		float width = map.GetLength(0);
 		float height = map.GetLength(1);
@@ -87,12 +86,13 @@ public class MapGenerator : MonoBehaviour {
 		if( yPos < -halfWidth || yPos > halfHeight )
 			throw new System.ArgumentException("Position off plane: ", yPos.ToString());
 		
-		int xCoord = (int)xPos + Mathf.FloorToInt(width / 2f);
-		int yCoord = (int)yPos + Mathf.FloorToInt(height / 2f);
+		int xCoord = Mathf.FloorToInt(xPos) + Mathf.FloorToInt(width / 2f);
+		int yCoord = Mathf.FloorToInt(yPos) + Mathf.FloorToInt(height / 2f);
 
 		return new int[]{xCoord, yCoord};
 	}
 
+	// TODO: add plane offset
 	private float[] CoordToPos(float[,] map, int xCoord, int yCoord){
 		float width = map.GetLength(0);
 		float height = map.GetLength(1);
