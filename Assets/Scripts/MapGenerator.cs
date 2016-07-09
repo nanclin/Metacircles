@@ -47,21 +47,27 @@ public class MapGenerator : MonoBehaviour {
 		}
 	}
 
+	private Vector2 ClampPosToMapSpace(float[,] map, Vector2 pos){
+		float width = map.GetLength(0);
+		float height = map.GetLength(1);
+		float halfWidth = width / 2f;
+		float halfHeight = height / 2f;
+		pos.x = Mathf.Clamp(pos.x, -halfWidth, halfWidth );
+		pos.y = Mathf.Clamp(pos.y, -halfHeight, halfHeight );
+		return pos;
+	}
+
 	[Range(-5,5)] public float[] Pos = new float[2];
 	[Range(0,9)] public int[] Coord = new int[2];
 	void Update(){
-//		Vector2 mousePos = Camera.ScreenToWorldPoint(Input.mousePosition);
-//		Dummy.transform.position = new Vector3(mousePos.x, mousePos.y, Camera.nearClipPlane);
+		Vector2 mousePos = Camera.ScreenToWorldPoint(Input.mousePosition);
+		mousePos = ClampPosToMapSpace(Map, mousePos);
+		Dummy.transform.position = new Vector3(mousePos.x, mousePos.y, Camera.nearClipPlane);
+
+		int[] coord = PosToCoord(Map,mousePos.x, mousePos.y);
+		print("pos to coord: " + coord[0] + ", " + coord[1] );
 
 		DrawMap();
-
-		int[] coord = PosToCoord(Map,Pos[0],Pos[1]);
-		float[] pos = CoordToPos(Map,Coord[0],Coord[1]);
-//		Dummy.transform.position = new Vector3(Pos[0], Pos[1], -1);
-		Dummy.transform.position = new Vector3(pos[0], pos[1], -1);
-
-		print("pos to coord: " + coord[0] + ", " + coord[1] );
-		print("coord to pos: " + pos[0] + ", " + pos[1] );
 	}
 
 	public void DrawMap(){
