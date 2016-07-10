@@ -71,6 +71,11 @@ public class MapGenerator : MonoBehaviour {
 		return (pos.x >= -halfWidth && pos.x <= halfWidth && pos.y >= -halfHeight && pos.y <= halfHeight);
 	}
 
+	private bool IsInMapSpace(float[,] map, int[] coord){
+		float width = map.GetLength(0);
+		float height = map.GetLength(1);
+		return (coord[0] >= 0 && coord[0] < width && coord[1] >= 0 && coord[1] < height );
+	}
 	void Update(){
 		Vector2 mousePos = Camera.ScreenToWorldPoint(Input.mousePosition);
 
