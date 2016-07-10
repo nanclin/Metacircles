@@ -39,30 +39,6 @@ public class MapGenerator : MonoBehaviour {
 		}
 	}
 
-	private Vector2 ClampPosToMapSpace(float[,] map, Vector2 pos){
-		float width = map.GetLength(0);
-		float height = map.GetLength(1);
-		float halfWidth = width / 2f;
-		float halfHeight = height / 2f;
-		pos.x = Mathf.Clamp(pos.x, -halfWidth, halfWidth );
-		pos.y = Mathf.Clamp(pos.y, -halfHeight, halfHeight );
-		return pos;
-	}
-
-	private bool IsInMapSpace(float[,] map, Vector2 pos){
-		float width = map.GetLength(0);
-		float height = map.GetLength(1);
-		float halfWidth = width / 2f;
-		float halfHeight = height / 2f;
-		return (pos.x >= -halfWidth && pos.x <= halfWidth && pos.y >= -halfHeight && pos.y <= halfHeight);
-	}
-
-	private bool IsInMapSpace(float[,] map, int[] coord){
-		float width = map.GetLength(0);
-		float height = map.GetLength(1);
-		return (coord[0] >= 0 && coord[0] < width && coord[1] >= 0 && coord[1] < height );
-	}
-
 	public void DisplayMap(){
 		Map = new float[Width, Height];
 		ResetMap(Map);
@@ -73,41 +49,7 @@ public class MapGenerator : MonoBehaviour {
 		DrawMap( CombineMaps( new List<float[,]>{ ApplyMetacircles( Map, Metacircles, Radiuses ), ApplyBrush( Map, 10, Vector2.zero ) } ) );
 	}
 
-	// TODO: add plane offset
-	private int[] PosToCoord(float[,] map, Vector2 pos){
-		float width = map.GetLength(0);
-		float height = map.GetLength(1);
-		float halfWidth = width / 2f;
-		float halfHeight = height / 2f;
-
-		if( pos.x < -halfWidth || pos.x > halfWidth )
-			throw new System.ArgumentException("Position off plane: ", pos.x.ToString());
-
-		if( pos.y < -halfWidth || pos.y > halfHeight )
-			throw new System.ArgumentException("Position off plane: ", pos.x.ToString());
-		
-		int xCoord = Mathf.FloorToInt(pos.x) + Mathf.FloorToInt(width / 2f);
-		int yCoord = Mathf.FloorToInt(pos.y) + Mathf.FloorToInt(height / 2f);
-
-		return new int[]{xCoord, yCoord};
-	}
-
-	// TODO: add plane offset
-	private Vector2 CoordToPos(float[,] map, int xCoord, int yCoord){
-		float width = map.GetLength(0);
-		float height = map.GetLength(1);
-
-		if( xCoord < 0 || xCoord >= width )
-			throw new System.ArgumentException("Coordinate out of range: ", xCoord.ToString());
-
-		if( yCoord < 0 || yCoord >= height )
-			throw new System.ArgumentException("Coordinate out of range: ", yCoord.ToString());
-
-		float xPos = (float)xCoord + 0.5f - width / 2f;
-		float yPos = (float)yCoord + 0.5f - height / 2f;
-
-		return new Vector2( xPos, yPos );
-	}
+	// Generate methods ////////////////////////////////////////////////////
 
 	private float[,] ApplyMetacircles(float[,] map, Vector2[] circles, float[] radiuses){
 		int width = map.GetLength(0);
@@ -178,12 +120,6 @@ public class MapGenerator : MonoBehaviour {
 		return map;
 	}
 
-	public void DrawMap(float[,] heightMap){
-		Texture2D texture = TextureFromHeightMap(heightMap);
-		TextureRenderer.sharedMaterial.mainTexture = texture;
-		TextureRenderer.transform.localScale = new Vector3(texture.width/10f, 1, texture.height/10f);
-	}
-
 	private float[,] ConvertHeightToBitMap(float[,] heightMap, float threshold){
 		int width = heightMap.GetLength(0);
 		int height = heightMap.GetLength(1);
@@ -192,10 +128,17 @@ public class MapGenerator : MonoBehaviour {
 		for( int y = 0; y < height; y++){
 			for( int x = 0; x < width; x++){
 				bitMap[x,y] = heightMap[x,y] / ValueScale > threshold ? 1 : 0;
-//				bitMap[x,y] = heightMap[x,y];
 			}
 		}
 		return bitMap;
+	}
+
+	// Texture methods ////////////////////////////////////////////////////
+
+	public void DrawMap(float[,] heightMap){
+		Texture2D texture = TextureFromHeightMap(heightMap);
+		TextureRenderer.sharedMaterial.mainTexture = texture;
+		TextureRenderer.transform.localScale = new Vector3(texture.width/10f, 1, texture.height/10f);
 	}
 
 	public Texture2D TextureFromHeightMap(float[,] heightMap){
@@ -225,4 +168,67 @@ public class MapGenerator : MonoBehaviour {
 		texture.Apply();
 		return texture;
 	}
+
+	// Helper methods ////////////////////////////////////////////////////
+
+	// TODO: add plane offset
+	private int[] PosToCoord(float[,] map, Vector2 pos){
+		float width = map.GetLength(0);
+		float height = map.GetLength(1);
+		float halfWidth = width / 2f;
+		float halfHeight = height / 2f;
+
+		if( pos.x < -halfWidth || pos.x > halfWidth )
+			throw new System.ArgumentException("Position off plane: ", pos.x.ToString());
+
+		if( pos.y < -halfWidth || pos.y > halfHeight )
+			throw new System.ArgumentException("Position off plane: ", pos.x.ToString());
+
+		int xCoord = Mathf.FloorToInt(pos.x) + Mathf.FloorToInt(width / 2f);
+		int yCoord = Mathf.FloorToInt(pos.y) + Mathf.FloorToInt(height / 2f);
+
+		return new int[]{xCoord, yCoord};
+	}
+
+	// TODO: add plane offset
+	private Vector2 CoordToPos(float[,] map, int xCoord, int yCoord){
+		float width = map.GetLength(0);
+		float height = map.GetLength(1);
+
+		if( xCoord < 0 || xCoord >= width )
+			throw new System.ArgumentException("Coordinate out of range: ", xCoord.ToString());
+
+		if( yCoord < 0 || yCoord >= height )
+			throw new System.ArgumentException("Coordinate out of range: ", yCoord.ToString());
+
+		float xPos = (float)xCoord + 0.5f - width / 2f;
+		float yPos = (float)yCoord + 0.5f - height / 2f;
+
+		return new Vector2( xPos, yPos );
+	}
+
+	private Vector2 ClampPosToMapSpace(float[,] map, Vector2 pos){
+		float width = map.GetLength(0);
+		float height = map.GetLength(1);
+		float halfWidth = width / 2f;
+		float halfHeight = height / 2f;
+		pos.x = Mathf.Clamp(pos.x, -halfWidth, halfWidth );
+		pos.y = Mathf.Clamp(pos.y, -halfHeight, halfHeight );
+		return pos;
+	}
+
+	private bool IsInMapSpace(float[,] map, Vector2 pos){
+		float width = map.GetLength(0);
+		float height = map.GetLength(1);
+		float halfWidth = width / 2f;
+		float halfHeight = height / 2f;
+		return (pos.x >= -halfWidth && pos.x <= halfWidth && pos.y >= -halfHeight && pos.y <= halfHeight);
+	}
+
+	private bool IsInMapSpace(float[,] map, int[] coord){
+		float width = map.GetLength(0);
+		float height = map.GetLength(1);
+		return (coord[0] >= 0 && coord[0] < width && coord[1] >= 0 && coord[1] < height );
+	}
+
 }
