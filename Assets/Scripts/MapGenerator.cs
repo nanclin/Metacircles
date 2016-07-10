@@ -94,7 +94,7 @@ public class MapGenerator : MonoBehaviour {
 			DrawMap( ConvertHeightToBitMap( ApplyMetacircles( Map, Metacircles, Radiuses ), Threshold ) );
 		}else{
 			float[,] metacirclesMap = ApplyMetacircles( Map, Metacircles, Radiuses );
-			float[,] gradientMap = GenerateGradientMap(Width, Height);
+//			float[,] gradientMap = GenerateGradientMap(Width, Height);
 			List<float[,]> maps = new List<float[,]>{ metacirclesMap };
 			DrawMap( CombineMaps(maps) );
 		}
@@ -141,22 +141,24 @@ public class MapGenerator : MonoBehaviour {
 		int height = map.GetLength(1);
 		for( int y = 0; y < height; y++){
 			for( int x = 0; x < width; x++){
-				Vector2 pos = CoordToPos(map, x, y );
-				float sum = 0;
-				for(int i = 0; i < circles.Length; i++){
-					float dx = pos.x - circles[i].x;
-					float dy = pos.y - circles[i].y;
-					float sqrDis = dx * dx + dy * dy;
-					float value = Mathf.Pow( radiuses[i], 2) / sqrDis;
-					value = Mathf.Pow(value, FalloffPower);
-					sum += value;
-				}
-				map[x,y] += sum / circles.Length;
-
-//				map[x,y] = ((float)x / (float)width + (float)y / (float)height) / 2f;
+				map[x,y] += GetMetacirclesValue(map, circles, radiuses, x, y) / circles.Length;
 			}
 		}
 		return map;
+	}
+
+	private float GetMetacirclesValue( float[,] map, Vector2[] circles, float[] radiuses, int x, int y ){
+		Vector2 pos = CoordToPos(map, x, y );
+		float sum = 0;
+		for(int i = 0; i < circles.Length; i++){
+			float dx = pos.x - circles[i].x;
+			float dy = pos.y - circles[i].y;
+			float sqrDis = dx * dx + dy * dy;
+			float value = Mathf.Pow( radiuses[i], 2) / sqrDis;
+			value = Mathf.Pow(value, FalloffPower);
+			sum += value;
+		}
+		return sum;
 	}
 
 	private float[,] GenerateGradientMap(int width, int height){
