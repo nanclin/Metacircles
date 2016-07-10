@@ -87,27 +87,27 @@ public class MapGenerator : MonoBehaviour {
 		return (coord[0] >= 0 && coord[0] < width && coord[1] >= 0 && coord[1] < height );
 	}
 
-	void FixedUpdate(){
-		if( FollowMouse ){
-			Vector2 dir = (MousePos - CharacterPos).normalized;
-			CharacterPos += dir * Time.fixedDeltaTime * CharacterSpeed;
-			CharacterPos = ClampPosToMapSpace( BrushMap, CharacterPos );
-		}
-	}
-
-	void Update(){
-		if( Input.GetMouseButtonDown(0) ){
-			FollowMouse = !FollowMouse;
-		}
-
-		if( FollowMouse ){
-			MousePos = Camera.ScreenToWorldPoint(Input.mousePosition);
-			MousePos = ClampPosToMapSpace(Map, MousePos);
-
-			ApplyBrush(BrushMap, Radiuses[0], CharacterPos);
-			DrawMap( BrushMap );
-		}
-	}
+//	void FixedUpdate(){
+//		if( FollowMouse ){
+//			Vector2 dir = (MousePos - CharacterPos).normalized;
+//			CharacterPos += dir * Time.fixedDeltaTime * CharacterSpeed;
+//			CharacterPos = ClampPosToMapSpace( BrushMap, CharacterPos );
+//		}
+//	}
+//
+//	void Update(){
+//		if( Input.GetMouseButtonDown(0) ){
+//			FollowMouse = !FollowMouse;
+//		}
+//
+//		if( FollowMouse ){
+//			MousePos = Camera.ScreenToWorldPoint(Input.mousePosition);
+//			MousePos = ClampPosToMapSpace(Map, MousePos);
+//
+//			ApplyBrush(BrushMap, Radiuses[0], CharacterPos);
+//			DrawMap( BrushMap );
+//		}
+//	}
 
 	public void DrawMap(){
 		Map = new float[Width,Height];
