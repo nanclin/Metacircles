@@ -120,7 +120,7 @@ public class MapGenerator : MonoBehaviour {
 	}
 
 	// TODO: add plane offset
-	private float[] CoordToPos(float[,] map, int xCoord, int yCoord){
+	private Vector2 CoordToPos(float[,] map, int xCoord, int yCoord){
 		float width = map.GetLength(0);
 		float height = map.GetLength(1);
 
@@ -133,7 +133,7 @@ public class MapGenerator : MonoBehaviour {
 		float xPos = (float)xCoord + 0.5f - width / 2f;
 		float yPos = (float)yCoord + 0.5f - height / 2f;
 
-		return new float[]{xPos, yPos};
+		return new Vector2( xPos, yPos );
 	}
 
 	private float[,] ApplyMetacircles(float[,] map, Vector2[] circles, float[] radiuses){
@@ -141,11 +141,11 @@ public class MapGenerator : MonoBehaviour {
 		int height = map.GetLength(1);
 		for( int y = 0; y < height; y++){
 			for( int x = 0; x < width; x++){
-				float[] pos = CoordToPos(map, x, y );
+				Vector2 pos = CoordToPos(map, x, y );
 				float sum = 0;
 				for(int i = 0; i < circles.Length; i++){
-					float dx = pos[0] - circles[i].x;
-					float dy = pos[1] - circles[i].y;
+					float dx = pos.x - circles[i].x;
+					float dy = pos.y - circles[i].y;
 					float sqrDis = dx * dx + dy * dy;
 					float value = Mathf.Pow( radiuses[i], 2) / sqrDis;
 					value = Mathf.Pow(value, FalloffPower);
