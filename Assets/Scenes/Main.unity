@@ -238,17 +238,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TextureRenderer: {fileID: 1065812069}
+  Width: 100
+  Height: 100
   ShadowColor: {r: 0.11764705, g: 0.11764705, b: 0.11764705, a: 1}
   LightColor: {r: 1, g: 1, b: 1, a: 1}
   DebugThresholdColor: {r: 1, g: 0, b: 0, a: 0.197}
   AutoUpdate: 1
-  Width: 100
-  Height: 100
+  DebugThreshold: 1
+  UseChunks: 1
+  RadiusMargin: 1.2
   ValueScale: 1
-  ThresholdZero: 0.1
+  ThresholdZero: 0.39
   Threshold: 1
   FalloffPower: 1.5
-  DebugThreshold: 0
   Metacircles:
   - {x: 0, y: 25}
   - {x: 0, y: 0}

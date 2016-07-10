@@ -5,17 +5,19 @@ using System.Collections.Generic;
 public class MapGenerator : MonoBehaviour {
 
 	[SerializeField] private Renderer TextureRenderer;
+	[SerializeField] public int Width = 100;
+	[SerializeField] public int Height = 100;
 	[SerializeField] private Color ShadowColor = Color.black;
 	[SerializeField] private Color LightColor = Color.white;
 	[SerializeField] private Color DebugThresholdColor = Color.red;
 	[SerializeField] public bool AutoUpdate;
-	[SerializeField] public int Width = 100;
-	[SerializeField] public int Height = 100;
+	[SerializeField] private bool DebugThreshold;
+	[SerializeField] private bool UseChunks;
+	[Range(1,3)][SerializeField] private float RadiusMargin = 1;
 	[Range(1,1000)][SerializeField] private float ValueScale = 1;
 	[Range(0.01f,1f)][SerializeField] private float ThresholdZero = 0.01f;
 	[Range(0.01f,1f)][SerializeField] private float Threshold = 0.5f;
 	[Range(1f,10f)][SerializeField] private float FalloffPower = 1f;
-	[SerializeField] private bool DebugThreshold;
 	[SerializeField] public Vector2[] Metacircles = null;
 	[SerializeField] private float[] Radiuses = null;
 
@@ -46,7 +48,13 @@ public class MapGenerator : MonoBehaviour {
 //		DrawMap( ConvertHeightToBitMap( ApplyMetacircles( Map, Metacircles, Radiuses ), Threshold ) );
 //		DrawMap( GenerateGradientMap(Width, Height) );
 //		DrawMap( ApplyBrush( Map, 10, Vector2.zero ) );
-		DrawMap( CombineMaps( new List<float[,]>{ ApplyMetacircles( Map, Metacircles, Radiuses ), ApplyBrush( Map, 10, Vector2.zero ) } ) );
+//		DrawMap( CombineMaps( new List<float[,]>{ ApplyMetacircles( Map, Metacircles, Radiuses ), ApplyBrush( Map, 10, Vector2.zero ) } ) );
+
+		if( UseChunks ){
+			DrawMap( ApplyMetacircleChunks( Map, Metacircles, Radiuses ) );
+		}else{
+			DrawMap( ApplyMetacircles( Map, Metacircles, Radiuses ) );
+		}
 	}
 
 	// Generate methods ////////////////////////////////////////////////////
@@ -57,6 +65,34 @@ public class MapGenerator : MonoBehaviour {
 		for( int y = 0; y < height; y++){
 			for( int x = 0; x < width; x++){
 				map[x,y] += GetMetacirclesValue(map, circles, radiuses, x, y) / circles.Length;
+			}
+		}
+		return map;
+	}
+
+	private float[,] ApplyMetacircleChunks(float[,] map, Vector2[] circles, float[] radiuses){
+		
+		for(int i = 0; i < circles.Length; i++){
+			Vector2 pos = circles[i];
+			int radius = Mathf.RoundToInt(radiuses[i] * RadiusMargin);
+
+			for( int y = -radius; y <= radius; y++){
+				for( int x = -radius; x <= radius; x++){
+
+					int[] centerCoord = PosToCoord(map, pos);
+					int px = centerCoord[0] + x;
+					int py = centerCoord[1] + y;
+
+					if( !IsInMapSpace(map, new int[2]{px,py} )){
+						continue;
+					}
+
+					float sqrDis = x*x + y*y;
+					float value = Mathf.Pow( radiuses[i], 2) / sqrDis;
+					value = Mathf.Pow(value, FalloffPower);
+					//			value = Mathf.Clamp(value, 0, circles.Length);
+					map[px,py] += value / circles.Length;
+				}
 			}
 		}
 		return map;
