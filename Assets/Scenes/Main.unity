@@ -120,7 +120,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46723850490404cf19adc98df39c51a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 20
+  Speed: 5
+  TopSpeed: 0.5
   TargetPos: {x: 0, y: 0}
 --- !u!23 &30286358
 MeshRenderer:
