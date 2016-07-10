@@ -5,7 +5,7 @@ public class Character : MonoBehaviour {
 	
 	[SerializeField] private float Speed = 20;
 
-	private Vector2 Pos;
+	public Vector2 Pos{ get; private set; }
 	public Vector2 TargetPos;
 
 	void Start(){

@@ -4,32 +4,22 @@ using System.Collections.Generic;
 
 public class MapGenerator : MonoBehaviour {
 
-	[SerializeField] private Camera Camera;
 	[SerializeField] private Renderer TextureRenderer;
-	[SerializeField] private GameObject Dummy;
 	[SerializeField] private Color ShadowColor = Color.black;
 	[SerializeField] private Color LightColor = Color.white;
 	[SerializeField] private Color DebugThresholdColor = Color.red;
 	[SerializeField] public bool AutoUpdate;
 	[SerializeField] public int Width = 100;
 	[SerializeField] public int Height = 100;
-	[SerializeField] public int Seed = 0;
 	[Range(1,1000)][SerializeField] private float ValueScale = 1;
 	[Range(0.01f,1f)][SerializeField] private float ThresholdZero = 0.01f;
 	[Range(0.01f,1f)][SerializeField] private float Threshold = 0.5f;
 	[Range(1f,10f)][SerializeField] private float FalloffPower = 1f;
-	[SerializeField] private float CharacterSpeed = 1f;
-	[SerializeField] private float Erase = 0.01f;
-	[SerializeField] private bool IsBitMap;
 	[SerializeField] private bool DebugThreshold;
-	[SerializeField] private Vector2[] Metacircles = null;
+	[SerializeField] public Vector2[] Metacircles = null;
 	[SerializeField] private float[] Radiuses = null;
 
 	private float[,] Map;
-	private float[,] BrushMap;
-	private bool FollowMouse = true;
-	private Vector2 MousePos;
-	private Vector2 CharacterPos;
 
 	void OnValidate(){
 		if( Width < 1 )
@@ -37,20 +27,6 @@ public class MapGenerator : MonoBehaviour {
 
 		if( Height < 1 )
 			Height = 1;
-	}
-
-	void Start(){
-		Map = new float[Width,Height];
-		BrushMap = new float[Width,Height];
-		ResetMap(Map);
-		ResetMap(BrushMap);
-
-		CharacterPos = Metacircles[0];
-	}
-
-	public void EraseMap(){
-		ResetMap(Map);
-		ResetMap(BrushMap);
 	}
 
 	private void ResetMap(float[,] map){
@@ -87,38 +63,14 @@ public class MapGenerator : MonoBehaviour {
 		return (coord[0] >= 0 && coord[0] < width && coord[1] >= 0 && coord[1] < height );
 	}
 
-//	void FixedUpdate(){
-//		if( FollowMouse ){
-//			Vector2 dir = (MousePos - CharacterPos).normalized;
-//			CharacterPos += dir * Time.fixedDeltaTime * CharacterSpeed;
-//			CharacterPos = ClampPosToMapSpace( BrushMap, CharacterPos );
-//		}
-//	}
-//
-//	void Update(){
-//		if( Input.GetMouseButtonDown(0) ){
-//			FollowMouse = !FollowMouse;
-//		}
-//
-//		if( FollowMouse ){
-//			MousePos = Camera.ScreenToWorldPoint(Input.mousePosition);
-//			MousePos = ClampPosToMapSpace(Map, MousePos);
-//
-//			ApplyBrush(BrushMap, Radiuses[0], CharacterPos);
-//			DrawMap( BrushMap );
-//		}
-//	}
-
-	public void DrawMap(){
-		Map = new float[Width,Height];
-		if( IsBitMap ){
-			DrawMap( ConvertHeightToBitMap( ApplyMetacircles( Map, Metacircles, Radiuses ), Threshold ) );
-		}else{
-			float[,] metacirclesMap = ApplyMetacircles( Map, Metacircles, Radiuses );
-//			float[,] gradientMap = GenerateGradientMap(Width, Height);
-			List<float[,]> maps = new List<float[,]>{ metacirclesMap };
-			DrawMap( CombineMaps(maps) );
-		}
+	public void DisplayMap(){
+		Map = new float[Width, Height];
+		ResetMap(Map);
+//		DrawMap( ApplyMetacircles( Map, Metacircles, Radiuses ) );
+//		DrawMap( ConvertHeightToBitMap( ApplyMetacircles( Map, Metacircles, Radiuses ), Threshold ) );
+//		DrawMap( GenerateGradientMap(Width, Height) );
+//		DrawMap( ApplyBrush( Map, 10, Vector2.zero ) );
+		DrawMap( CombineMaps( new List<float[,]>{ ApplyMetacircles( Map, Metacircles, Radiuses ), ApplyBrush( Map, 10, Vector2.zero ) } ) );
 	}
 
 	// TODO: add plane offset
@@ -177,6 +129,7 @@ public class MapGenerator : MonoBehaviour {
 			float sqrDis = dx * dx + dy * dy;
 			float value = Mathf.Pow( radiuses[i], 2) / sqrDis;
 			value = Mathf.Pow(value, FalloffPower);
+//			value = Mathf.Clamp(value, 0, circles.Length);
 			sum += value;
 		}
 		return sum;
@@ -192,7 +145,7 @@ public class MapGenerator : MonoBehaviour {
 		return map;
 	}
 
-	private void ApplyBrush( float[,] map, float radius, Vector2 pos ){
+	private float[,] ApplyBrush( float[,] map, float radius, Vector2 pos ){
 		for( int y = (int)-radius; y <= radius; y++ ){
 			for( int x = (int)-radius; x <= radius; x++ ){
 				int[] centerCoord = PosToCoord(map, pos);
@@ -205,6 +158,7 @@ public class MapGenerator : MonoBehaviour {
 				map[px,py] += Mathf.Pow(radius,2) / sqrDis > 1 ? 1 : 0;
 			}
 		}
+		return map;
 	}
 
 	private float[,] CombineMaps(List<float[,]> maps){
@@ -224,39 +178,7 @@ public class MapGenerator : MonoBehaviour {
 		return map;
 	}
 
-	private float[,] ModifyMap(float[,] map){
-		int width = map.GetLength(0);
-		int height = map.GetLength(1);
-		for( int y = 0; y < height; y++){
-			for( int x = 0; x < width; x++){
-				float xCoor = -((float)x - width / 2);
-				float yCoor = -((float)y - height / 2);
-				float value = 0;
-				float numOfCircles = Metacircles.Length;
-				for(int i = 0; i < numOfCircles; i++){
-					float dx = xCoor - Metacircles[i].x;
-					float dy = yCoor - Metacircles[i].y;
-					float sqrDis = dx * dx + dy * dy;
-					value += (Mathf.Pow( Radiuses[i], 2) / sqrDis);
-				}
-
-//				if( x == width/2 && y == height/2 ){
-//					print(value);
-//				}
-//
-				value /= numOfCircles;
-
-				float newMapValue = map[x,y];
-				newMapValue += value;
-				if( newMapValue < 3 )
-					newMapValue -= Erase;
-				map[x,y] = Mathf.Clamp(newMapValue, 0, 10);
-			}
-		}
-		return map;
-	}
-
-	public void DrawMap(float[,] heightMap, int seed = 0){
+	public void DrawMap(float[,] heightMap){
 		Texture2D texture = TextureFromHeightMap(heightMap);
 		TextureRenderer.sharedMaterial.mainTexture = texture;
 		TextureRenderer.transform.localScale = new Vector3(texture.width/10f, 1, texture.height/10f);

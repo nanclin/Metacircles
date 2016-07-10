@@ -13,16 +13,16 @@ public class MapGeneratorEditor : Editor {
 
 		if(DrawDefaultInspector()){
 			if(mapGen.AutoUpdate){
-//				mapGen.DrawMap();
+				mapGen.DisplayMap();
 			}
 		}
-//
+
 //		if( GUILayout.Button("Generate")){
-//			mapGen.DrawMap(mapGen.Width, mapGen.Height, mapGen.Seed);
+//			mapGen.DisplayMap();
 //		}
 
-		if( GUILayout.Button("Erase")){
-			mapGen.EraseMap();
-		}
+//		if( GUILayout.Button("Erase")){
+//			mapGen.EraseMap();
+//		}
 	}
 }

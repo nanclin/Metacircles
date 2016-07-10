@@ -179,71 +179,7 @@ Transform:
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &565745573
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 565745577}
-  - 114: {fileID: 565745574}
-  m_Layer: 0
-  m_Name: MapGenerator
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &565745574
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 565745573}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 379dc2777ec314d51a7e13aaa11a07b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Camera: {fileID: 1558071250}
-  TextureRenderer: {fileID: 1065812069}
-  Dummy: {fileID: 1318105436}
-  ShadowColor: {r: 0.11764705, g: 0.11764705, b: 0.11764705, a: 1}
-  LightColor: {r: 1, g: 1, b: 1, a: 1}
-  DebugThresholdColor: {r: 1, g: 0, b: 0, a: 0.197}
-  AutoUpdate: 1
-  Width: 100
-  Height: 100
-  Seed: 0
-  ValueScale: 100
-  ThresholdZero: 0.1
-  Threshold: 1
-  FalloffPower: 1.5
-  CharacterSpeed: 20
-  Erase: 0.01
-  IsBitMap: 0
-  DebugThreshold: 0
-  Metacircles:
-  - {x: 45, y: -45}
-  - {x: 45, y: -45}
-  Radiuses:
-  - 5
-  - 20
---- !u!4 &565745577
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 565745573}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &951930810
 GameObject:
@@ -254,6 +190,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 951930812}
   - 114: {fileID: 951930811}
+  - 114: {fileID: 951930813}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -273,8 +210,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Camera: {fileID: 1558071250}
+  MapGenerator: {fileID: 951930813}
   Character: {fileID: 30286357}
-  MapGenerator: {fileID: 565745574}
 --- !u!4 &951930812
 Transform:
   m_ObjectHideFlags: 0
@@ -286,8 +223,37 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &951930813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 951930810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 379dc2777ec314d51a7e13aaa11a07b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TextureRenderer: {fileID: 1065812069}
+  ShadowColor: {r: 0.11764705, g: 0.11764705, b: 0.11764705, a: 1}
+  LightColor: {r: 1, g: 1, b: 1, a: 1}
+  DebugThresholdColor: {r: 1, g: 0, b: 0, a: 0.197}
+  AutoUpdate: 1
+  Width: 100
+  Height: 100
+  ValueScale: 1
+  ThresholdZero: 0.1
+  Threshold: 1
+  FalloffPower: 1.5
+  DebugThreshold: 0
+  Metacircles:
+  - {x: 0, y: 25}
+  - {x: 0, y: 0}
+  Radiuses:
+  - 5
+  - 20
 --- !u!1 &1065812068
 GameObject:
   m_ObjectHideFlags: 0
@@ -350,7 +316,7 @@ Transform:
   m_LocalScale: {x: 10, y: 1, z: 10}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &1318105436
 GameObject:
@@ -427,7 +393,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1558071246
 GameObject:
