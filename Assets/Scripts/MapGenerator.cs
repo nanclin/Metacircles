@@ -76,7 +76,7 @@ public class MapGenerator : MonoBehaviour {
 
 		if( IsInMapSpace(Map,mousePos) ){
 			Dummy.SetActive(true);
-			int[] coord = PosToCoord(Map,mousePos.x, mousePos.y);
+			int[] coord = PosToCoord(Map ,mousePos);
 			print("pos to coord: " + coord[0] + ", " + coord[1] );
 			Metacircles[0] = mousePos;
 			DrawMap();
@@ -101,20 +101,20 @@ public class MapGenerator : MonoBehaviour {
 	}
 
 	// TODO: add plane offset
-	private int[] PosToCoord(float[,] map, float xPos, float yPos){
+	private int[] PosToCoord(float[,] map, Vector2 pos){
 		float width = map.GetLength(0);
 		float height = map.GetLength(1);
 		float halfWidth = width / 2f;
 		float halfHeight = height / 2f;
 
-		if( xPos < -halfWidth || xPos > halfWidth )
-			throw new System.ArgumentException("Position off plane: ", xPos.ToString());
+		if( pos.x < -halfWidth || pos.x > halfWidth )
+			throw new System.ArgumentException("Position off plane: ", pos.x.ToString());
 
-		if( yPos < -halfWidth || yPos > halfHeight )
-			throw new System.ArgumentException("Position off plane: ", yPos.ToString());
+		if( pos.y < -halfWidth || pos.y > halfHeight )
+			throw new System.ArgumentException("Position off plane: ", pos.x.ToString());
 		
-		int xCoord = Mathf.FloorToInt(xPos) + Mathf.FloorToInt(width / 2f);
-		int yCoord = Mathf.FloorToInt(yPos) + Mathf.FloorToInt(height / 2f);
+		int xCoord = Mathf.FloorToInt(pos.x) + Mathf.FloorToInt(width / 2f);
+		int yCoord = Mathf.FloorToInt(pos.y) + Mathf.FloorToInt(height / 2f);
 
 		return new int[]{xCoord, yCoord};
 	}
