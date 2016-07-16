@@ -12,7 +12,7 @@ public class Character : MonoBehaviour {
 	private Vector3 InitPos;
 
 	void Start(){
-		InitPos = transform.position;	
+//		InitPos = transform.position;	
 		Pos = (Vector2)transform.position;
 	}
 
@@ -25,7 +25,7 @@ public class Character : MonoBehaviour {
 		Pos.x = Mathf.Clamp(Pos.x, GameController.Instance.CharacterWorldLeftEdge, GameController.Instance.CharacterWorldRightEdge);
 		Pos.y = Mathf.Clamp(Pos.y, GameController.Instance.CharacterWorldBottomEdge, GameController.Instance.CharacterWorldTopEdge);
 
-		transform.position = InitPos + new Vector3(Pos.x, Pos.y, 0);
+		transform.position = InitPos + new Vector3(Pos.x, Pos.y, -10);
 	}
 
 }

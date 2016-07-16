@@ -37,8 +37,8 @@ public class GameController : MonoBehaviour {
 	}
 
 	void Start(){
-		InitCameraPos = CameraProxy.transform.position;
-//		InitCameraPos = Camera.transform.position;
+//		InitCameraPos = CameraProxy.transform.position;
+		InitCameraPos = Camera.transform.position;
 	}
 
 	void Update(){
@@ -67,13 +67,13 @@ public class GameController : MonoBehaviour {
 		float cameraX = Mathf.Lerp(minCameraPosX, maxCameraPosX, valX);
 		float cameraY = Mathf.Lerp(minCameraPosY, maxCameraPosY, valY);
 
-//		Camera.transform.position = InitCameraPos + new Vector3(cameraX, cameraY, 0);
-		CameraProxy.transform.position = InitCameraPos + new Vector3(cameraX, cameraY, 0);
+		Camera.transform.position = InitCameraPos + new Vector3(cameraX, cameraY, 0);
+//		CameraProxy.transform.position = InitCameraPos + new Vector3(cameraX, cameraY, 0);
 
 
-//		MapGenerator.Metacircles[0] = Character.Pos;
-//
-//		MapGenerator.DisplayMap();
+		MapGenerator.Metacircles[0] = Character.Pos;
+
+		MapGenerator.DisplayMap();
 	}
 
 }

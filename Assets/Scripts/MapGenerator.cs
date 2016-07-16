@@ -7,6 +7,7 @@ public class MapGenerator : MonoBehaviour {
 	[SerializeField] private Renderer TextureRenderer;
 	[SerializeField] public int Width = 100;
 	[SerializeField] public int Height = 100;
+	[SerializeField] public float PixelSize = 1f;
 	[SerializeField] private Color ShadowColor = Color.black;
 	[SerializeField] private Color LightColor = Color.white;
 	[SerializeField] private Color DebugThresholdColor = Color.red;
@@ -174,7 +175,9 @@ public class MapGenerator : MonoBehaviour {
 	public void DrawMap(float[,] heightMap){
 		Texture2D texture = TextureFromHeightMap(heightMap);
 		TextureRenderer.sharedMaterial.mainTexture = texture;
-		TextureRenderer.transform.localScale = new Vector3(texture.width/10f, 1, texture.height/10f);
+		Vector3 scale = new Vector3(texture.width, 1, texture.height);
+		scale /= 10f; // scale to unitys built-in plane
+		TextureRenderer.transform.localScale = scale * PixelSize;
 	}
 
 	public Texture2D TextureFromHeightMap(float[,] heightMap){
@@ -214,6 +217,8 @@ public class MapGenerator : MonoBehaviour {
 		float halfWidth = width / 2f;
 		float halfHeight = height / 2f;
 
+		pos /= PixelSize;
+
 		if( pos.x < -halfWidth || pos.x > halfWidth )
 			throw new System.ArgumentException("Position off plane: ", pos.x.ToString());
 
@@ -240,7 +245,7 @@ public class MapGenerator : MonoBehaviour {
 		float xPos = (float)xCoord + 0.5f - width / 2f;
 		float yPos = (float)yCoord + 0.5f - height / 2f;
 
-		return new Vector2( xPos, yPos );
+		return new Vector2( xPos, yPos ) * PixelSize;
 	}
 
 	private Vector2 ClampPosToMapSpace(float[,] map, Vector2 pos){
