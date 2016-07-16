@@ -279,18 +279,18 @@ MonoBehaviour:
   MapGenerator: {fileID: 951930813}
   Character: {fileID: 30286357}
   CameraProxy: {fileID: 1166818477}
-  CameraViewLeftEdge: 15
-  CameraViewRightEdge: -15
+  CameraViewLeftEdge: 8
+  CameraViewRightEdge: -8
   CameraViewBottomEdge: 15
   CameraViewTopEdge: -15
   WorldLeftEdge: -50
   WorldRightEdge: 50
   WorldBottomEdge: -50
   WorldTopEdge: 50
-  CharacterWorldLeftEdge: -30
-  CharacterWorldRightEdge: 30
-  CharacterWorldBottomEdge: -30
-  CharacterWorldTopEdge: 30
+  CharacterWorldLeftEdge: -45
+  CharacterWorldRightEdge: 45
+  CharacterWorldBottomEdge: -45
+  CharacterWorldTopEdge: 45
 --- !u!4 &951930812
 Transform:
   m_ObjectHideFlags: 0
